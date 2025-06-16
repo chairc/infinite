@@ -13,10 +13,9 @@ class BaseChat(ABC):
     Base chat class
     """
 
-    def __init__(self, user_input: str, messages: list, history: bool, configs: dict, **kwargs):
+    def __init__(self, messages: list, history: bool, configs: dict, **kwargs):
         """
         Init base chat
-        :param user_input: User input message
         :param messages: History messages list
         :param history: Chat with history
         :param configs: Model all configuration information
@@ -25,8 +24,7 @@ class BaseChat(ABC):
         if history is True:
             self.messages = messages
         else:
-            self.messages = None
-        self.user_input = user_input
+            self.messages = []
         self.history = history
         self.configs = configs
         self.use_stream = self.check_is_stream()
@@ -39,17 +37,19 @@ class BaseChat(ABC):
         return self.configs["stream"]
 
     @abstractmethod
-    def chat(self):
+    def chat(self, user_input: str, **kwargs):
         """
         Base chat
+        :param user_input: User input message
         :return: None
         """
         pass
 
     @abstractmethod
-    def chat_async(self):
+    def chat_async(self, user_input: str, **kwargs):
         """
         Base async chat
+        :param user_input: User input message
         :return: None
         """
         pass

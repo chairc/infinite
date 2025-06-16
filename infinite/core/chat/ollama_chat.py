@@ -8,6 +8,7 @@
 import ollama
 
 from infinite.core.chat.base import BaseChat
+from infinite.core.messages.ollama_message import OllamaMessage
 
 
 class OllamaChat(BaseChat):
@@ -20,45 +21,44 @@ class OllamaChat(BaseChat):
         Init ollama chat
         """
         super().__init__(**kwargs)
+        # Init a new OllamaMessage class
+        self.ollama_message = OllamaMessage()
 
-    def return_ollama_response_data(self, response):
-        """
-        Return response data
-        :param response: Ollama chat response data
-        :return: Stream data or no stream data
-        """
-        # Stream
-        if self.use_stream is True:
-            for chunk in response:
-                yield chunk.message.content
-        else:
-            return response.message.content
-
-    def chat(self):
+    def chat(self, user_input: str, **kwargs):
         """
         Ollama default chat
-        :return: Stream data or no stream data
+        :return: No stream data
         """
         # Chat
-        response = ollama.chat(
+        # Create user message
+        user_message = self.ollama_message.create_message(role="user", content=user_input)
+        response = ollama.Client(host=self.configs["server"]).chat(
             model=self.configs["model"],
-            messages=[*self.messages, {"role": "user", "content": self.user_input}],
-            stream=self.use_stream,
+            messages=[*self.messages, user_message],
+            stream=False,
+            think=self.configs["think"],
             format=self.configs["format"],
             keep_alive=self.configs["keep_alive"],
+            options=self.configs["options"],
         )
-        return self.return_ollama_response_data(response=response)
+        return response.message
 
-    async def chat_async(self):
+    async def chat_async(self, user_input: str, **kwargs):
         """
         Ollama async chat client, work with asyncio
-        :return: Stream data or no stream data
+        :return: Stream data
         """
-        response = await ollama.AsyncClient().chat(
+        # Create user message
+        user_message = self.ollama_message.create_message(role="user", content=user_input)
+        async for part in await ollama.AsyncClient(host=self.configs["server"]).chat(
             model=self.configs["model"],
-            messages=[*self.messages, {"role": "user", "content": self.user_input}],
-            stream=self.use_stream,
+            messages=[*self.messages, user_message],
+            stream=True,
+            think=self.configs["think"],
             format=self.configs["format"],
             keep_alive=self.configs["keep_alive"],
-        )
-        return self.return_ollama_response_data(response=response)
+            options=self.configs["options"],
+        ):
+            # print(part.message.role, end="", flush=True)
+            # print(part.message.content, end="", flush=True)
+            yield part.message

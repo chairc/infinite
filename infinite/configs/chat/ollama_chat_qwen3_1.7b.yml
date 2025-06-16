@@ -1,0 +1,59 @@
+# Detail information please visit https://github.com/ollama/ollama/blob/main/docs/api.md
+# Base settings
+model: qwen3:1.7b
+#  should the model think before responding for thinking model
+think:
+# List of tools in JSON for the model to use if supported
+tools:
+
+# Message settings (optional)
+# Support 3 approach input
+# Approach 1: Dictionary input
+# messages: {'role': 'system', 'content': 'You are a friendly bot.'}
+# Approach 2: History messages input
+# messages: [{'role': 'system', 'content': 'You are a friendly bot.'}, {'role': 'user', 'content': 'Hello, how are you?'}]
+# Approach 3: Ollama messages format, used to initialize as a standard template
+messages:
+  # The role of the message, either system, user, assistant, or tool
+  role: system
+  # The content of the message
+  content: You are a friendly bot.
+  # The model's thinking process, if the model is thinking model
+  thinking:
+  # A list of images to include in the message
+  images:
+  # A list of tools in JSON that the model wants to use
+  tool_calls:
+
+# Advanced settings (optional)
+# The format to return a response, such as json, object
+format:
+# Blocking or streaming
+stream: true
+# How long the model will stay loaded into memory
+keep_alive: 5m
+# Additional model parameters
+options:
+  # The temperature of the model
+  temperature: 0.8
+  # Works together with top-k
+  top_p: 0.9
+  # Reduces the probability of generating nonsense
+  top_k: 40
+  # Alternative to the top_p, and aims to ensure a balance of quality and variety
+  min_p: 0.0
+  # Sets the random number seed to use for generation
+  seed: 0
+  # Sets the stop sequences to use
+  stop:
+  # Maximum number of tokens to predict when generating text
+  num_predict: -1
+  # Sets the size of the context window used to generate the next token
+  num_ctx: 2048
+  # Sets how far back for the model to look back to prevent repetition
+  repeat_last_n: 64
+  # Sets how strongly to penalize repetitions
+  repeat_penalty: 1.1
+
+# Ollama personalization
+server: http://localhost:11434

@@ -18,9 +18,16 @@ def load_ollama_yaml_config(file_name: str, file_type: str):
     :param file_type: The yaml file type, such as chat, generate...
     :return: The yaml params
     """
-    # Paths are matched based on name
-    current_path = os.path.dirname(p=os.path.abspath(__file__))
-    yml_path = os.path.join(current_path, file_type, file_name)
+    if os.path.dirname(file_name) != "":
+        # Full path
+        yml_path = file_name
+    else:
+        # Only file name
+        # Paths are matched based on name
+        current_path = os.path.dirname(p=os.path.abspath(__file__))
+        yml_path = os.path.join(current_path, file_type, file_name)
+
+
     # Check the current file path
     if check_is_valid_yaml_file(file_path=yml_path):
         # Gets the current file path
