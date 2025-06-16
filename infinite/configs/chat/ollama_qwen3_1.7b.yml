@@ -1,5 +1,0 @@
-model: "qwen3:1.7b"
-prompt:
-stream: False
-format:
-keep_alive:
