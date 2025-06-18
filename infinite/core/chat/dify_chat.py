@@ -19,8 +19,11 @@ class DifyChat(BaseChat):
         """
         super().__init__(**kwargs)
 
-    def chat(self):
+    def chat(self, user_input: str | dict, **kwargs):
         pass
 
-    def async_chat(self):
+    async def chat_async(self, user_input: str | dict, **kwargs):
+        pass
+
+    def save_history_messages(self, current_message: dict):
         pass
